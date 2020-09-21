@@ -73,6 +73,18 @@ functions:
     - http:
         path: response
         method: post
+        integration: lambda
+        response:
+          headers:
+            Content-Type: "'text/xml'"
+          template: $input.path("$")
+          statusCodes:
+            200:
+              pattern: ''
+              template:
+                application/json: $input.path("$")
+              headers:
+                Content-Type: "'text/xml'"
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
@@ -125,3 +137,6 @@ functions:
 #     NewOutput:
 #       Description: "Description for the output"
 #       Value: "Some output value"
+
+plugins:
+  - serverless-python-requirements
