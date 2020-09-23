@@ -31,6 +31,7 @@ provider:
     TWILIO_AUTH_TOKEN: ${file(./config/config.${self:provider.stage}.json):serverless.twilio_auth_token}
     TWILIO_SEND_FROM: ${file(./config/config.${self:provider.stage}.json):serverless.send_from}
     TWILIO_SEND_TO_LIST: ${file(./config/config.${self:provider.stage}.json):serverless.send_to_list}
+    AWS_PROFILE_NAME: ${file(./config/config.${self:provider.stage}.json):serverless.profile}
 
 
 # you can overwrite defaults here
