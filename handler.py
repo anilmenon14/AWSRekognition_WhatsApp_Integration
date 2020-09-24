@@ -1,19 +1,39 @@
 import os
+from pathlib import Path
+import shutil
+import requests
 
 from twilio.twiml.messaging_response import Body, Message, Redirect, MessagingResponse
 #from googletrans import Translator
 import boto3
 
-#session = boto3.Session(profile_name=os.environ.get('AWS_PROFILE_NAME'))
+rekogClient = boto3.client('rekognition')
 
 
 
 def httpWebHooktoTwilioURL(event, context):
     print(event) #To have event come up in cloudwatchLogs
-    if int(event['body']['NumMedia'])> 0:
-        bodyContent = event['body']['MediaUrl0']
-    else:
-        bodyContent = event['body']['Body']
+    numMedia = int(event['body']['NumMedia'])
+    if (numMedia == 1):
+        if (event['body']['MediaContentType0']=='image/jpeg'):
+            image_url = event['body']['MediaUrl0']
+            filename = os.path.join(os.getcwd(),Path("../../tmp/{}.jpg".format(event['body']['MessageSid'])))
+            retrieveContent = requests.get(image_url, stream = True)
+            if retrieveContent.status_code == 200:
+                retrieveContent.raw.decode_content = True #Required to ensure file size is not zero
+                with open(filename,'wb') as f: #writing into file
+                    shutil.copyfileobj(retrieveContent.raw, f)
+
+            with open(filename,'rb') as image:
+                response = rekogClient.recognize_celebrities(Image={'Bytes': image.read()})
+            print(response)
+            bodyContent = "{} celebrities found".format(len(response['CelebrityFaces']))
+        else:
+            bodyContent = "Image type is not JPEG or PNG. Please send only one of these."
+    elif (numMedia > 1) :
+        bodyContent = "Please only send one image at a time "
+    elif (numMedia == 0) :
+        bodyContent = "Hi, please attach a JPEG or PNG image for facial recognition of celebrities."
     try:
         #translator = Translator()
         response = MessagingResponse()
@@ -24,16 +44,3 @@ def httpWebHooktoTwilioURL(event, context):
         return response.to_xml()
     except:
         return "An Error has occured. Please contact support."
-
-#        "headers": {
-#            'Content-Type' : 'text/xml'
-#        },
-
-    # Use this code if you don't use the http event with the LAMBDA-PROXY
-    # integration
-    """
-    return {
-        "message": "Go Serverless v1.0! Your function executed successfully!",
-        "event": event
-    }
-    """

@@ -22,3 +22,4 @@ var/
 
 config/config.dev.json
 node_modules/
+tmp/
