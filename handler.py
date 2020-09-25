@@ -25,9 +25,12 @@ def httpWebHooktoTwilioURL(event, context):
                     shutil.copyfileobj(retrieveContent.raw, f)
 
             with open(filename,'rb') as image:
-                response = rekogClient.recognize_celebrities(Image={'Bytes': image.read()})
-            print(response)
-            bodyContent = "{} celebrities found".format(len(response['CelebrityFaces']))
+                rekogResponse = rekogClient.recognize_celebrities(Image={'Bytes': image.read()})
+            print(rekogResponse)
+            bodyContent = "{} celebrities found".format(len(rekogResponse['CelebrityFaces']))
+            if (len(rekogResponse['CelebrityFaces']) > 0):
+                for celeb in rekogResponse['CelebrityFaces']:
+                        bodyContent += "{}    {} : {}% match confidence".format(os.linesep,celeb['Name'],celeb['MatchConfidence'])
         else:
             bodyContent = "Image type is not JPEG or PNG. Please send only one of these."
     elif (numMedia > 1) :
