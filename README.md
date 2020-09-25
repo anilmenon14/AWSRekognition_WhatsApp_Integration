@@ -1,6 +1,10 @@
 # AWSRekognition_WhatsApp_Integration
 Serverless project to send and receive media files for image recognition by AWS Rekognition
 
+## Pre-requisites
+
+To have serverless setup , refer to 'Pre-requisites after cloning project' listed in [this link](https://github.com/anilmenon14/TwilioAWSLambda#pre-requisites-after-cloning-project)
+
 ## Workflow overview:
 
 1. User initiates a message ‘E.g ‘Hello’ or ‘Hi’ or anything.
