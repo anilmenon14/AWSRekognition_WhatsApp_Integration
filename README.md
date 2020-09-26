@@ -28,8 +28,8 @@ The webhook link to use is the one that shows under 'endpoints' once you have de
 
 ![Christian Bale](img/Bale.PNG)  
 
-![Batman](batman.PNG)  
+![Batman](img/batman.PNG)  
 
 #### Apparently Ryan Toolson can be cast as Captain America if Chris Evans declines to extend his contract....
 
-![Avengers assemble!](avengers.PNG)  
+![Avengers assemble!](img/avengers.PNG)  
